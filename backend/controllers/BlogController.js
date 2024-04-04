@@ -12,29 +12,8 @@ const getAllBlogs = async (req, res) => {
   };
 
   const getBlogById = async (req, res) => {
-    // try {
-    //   const blog = await Blog.findById(req.params.id);
-    //   if (!blog) {
-    //     return res.status(404).json({ message: 'Blog not found' });
-    //   }
-    //   res.status(200).json({ message: 'Blog retrieved successfully', blog });
-    // } catch (error) {
-    //   res.status(500).json({ message: 'Failed to retrieve blog', error: error.message });
-    // }
     try {
-      const blog = await Blog.findById(req.params.id).populate({
-        path: 'comments',
-        populate: {
-          path: 'replies',
-          // populate: {
-          //   path: 'replies',
-          //   populate: {
-          //     path: 'replies',
-          //     // Add more nested populate calls as needed for deeper nesting
-          //   }
-          // }
-        }
-      }).exec();
+      const blog = await Blog.findById(req.params.id);
       if (!blog) {
         return res.status(404).json({ message: 'Blog not found' });
       }
@@ -42,6 +21,27 @@ const getAllBlogs = async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: 'Failed to retrieve blog', error: error.message });
     }
+    // try {
+    //   const blog = await Blog.findById(req.params.id).populate({
+    //     path: 'comments',
+    //     populate: {
+    //       path: 'replies',
+    //       // populate: {
+    //       //   path: 'replies',
+    //       //   populate: {
+    //       //     path: 'replies',
+    //       //     // Add more nested populate calls as needed for deeper nesting
+    //       //   }
+    //       // }
+    //     }
+    //   }).exec();
+    //   if (!blog) {
+    //     return res.status(404).json({ message: 'Blog not found' });
+    //   }
+    //   res.status(200).json({ message: 'Blog retrieved successfully', blog });
+    // } catch (error) {
+    //   res.status(500).json({ message: 'Failed to retrieve blog', error: error.message });
+    // }
 
   };
 

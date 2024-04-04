@@ -2,7 +2,7 @@ const express = require("express");
 
 const {createBlog, getAllBlogs, getBlogById} = require("../controllers/BlogController")
 const isAuthenticated = require("../middlewares/auth")
-const {createComment , getAllReplies} = require("../controllers/CommentController");
+const {createComment , getAllReplies, addReply} = require("../controllers/CommentController");
 
 
 const router = express.Router();
@@ -35,6 +35,7 @@ router.post("/add", isAuthenticated, upload.single("coverImage"),createBlog);
 router.get("/bulk", isAuthenticated,getAllBlogs);
 router.get("/:id",isAuthenticated, getBlogById );
 router.post("/comment/:blogId", isAuthenticated, createComment);
+
 router.post("/:blogId/reply/:commentId", isAuthenticated, createComment)
 router.get("/:blogId/replies", isAuthenticated, getAllReplies);
 

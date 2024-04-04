@@ -1,3 +1,5 @@
+const Blog = require('../models/Blog');
+const User = require("../models/User")
 const Comment = require('../models/Comment');
 
  const createComment = async (req, res) => {
@@ -21,7 +23,34 @@ const Comment = require('../models/Comment');
     }
   };
 
+// const addReply = async (req, res) => {
+//   const blogId = req.params.blogId;
+//   const { text  } = req.body;
+//   const postedBy = req.userId;
 
+//   try {
+//     // Find the post by ID
+//     const post = await Blog.findById(blogId);
+
+//     const user= req.user
+//     const fullname = user.fullName
+
+//     if (!post) {
+//       return res.status(404).json({ message: "Post not found" });
+//     }
+
+//     // Add the new reply
+//     post.replies.push({ postedBy, text,  username: fullname });
+
+//     // Save the updated post
+//     const updatedPost = await post.save();
+
+//     res.status(201).json(updatedPost);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// };
 
 
 
@@ -52,6 +81,6 @@ const Comment = require('../models/Comment');
     }
   };
   
-  module.exports = getAllReplies;
   
-module.exports = {createComment, getAllReplies};
+  
+module.exports = { getAllReplies, createComment};

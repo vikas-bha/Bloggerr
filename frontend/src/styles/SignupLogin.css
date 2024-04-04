@@ -1,0 +1,48 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.App{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: antiquewhite;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    background-color: grey;
+    padding: 20px;
+    .form-container{
+        color: white;
+    }
+}
+h1{
+    color: white;
+}
+input{
+    display: block;
+    width: 100%;
+    margin-top: 15px;
+    padding: 15px;
+   
+}
+.submitButton{
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+   color: gray;
+}
+
+.toggleButton{
+ border: none;
+ margin-top: 10px;   
+ background-color: grey;
+ font-size: large;
+ color: white;
+}

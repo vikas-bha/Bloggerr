@@ -1,5 +1,27 @@
 const { Schema, model } = require('mongoose');
+const replySchema = Schema({
 
+  postedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+  },
+  blogId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Blog', 
+  },
+  text: {
+      type: String,
+      required: true
+  },
+
+  username: {
+      type: String
+  },
+  // Nested replies
+  replies: [this]
+});
 
 const blogSchema = new Schema(
     {
@@ -23,11 +45,13 @@ const blogSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: 'Comment',
       }],
+      // replies : [replySchema]
   
     },
     { timestamps: true }
   );
   
+
   const Blog = model('Blog', blogSchema);
   
   module.exports = Blog;
