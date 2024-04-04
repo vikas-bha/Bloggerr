@@ -19,7 +19,7 @@ function App() {
         <Route path="/signup" element={<Signup/>} /> */}
         <Route exact path="/bulk" element={<Blogs/>}/>
         <Route exact path="/blogs/:id" element={<Blog/>}/>    
-        {/* <Route exact path ="/create" element={<CreateBlog/>} /> */}
+        <Route exact path ="/create" element={<CreateBlog/>} />
           </Routes>
     </Router>
   </UserProvider>

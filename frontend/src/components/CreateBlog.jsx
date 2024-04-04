@@ -2,24 +2,74 @@ import React, { useEffect, useState } from 'react'
 import { useUser } from '../UserContext';
 import { useNavigate } from 'react-router-dom';
 import "../styles/CreateBlog.css"
+
+
+const navbarStyles = {
+    display : "flex", 
+    justifyContent: "space-between"
+}
+
+const navbarLeft ={
+    cursor : "pointer"
+}
+
+const publishBlog ={
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    backgroundColor: 'antiquewhite',
+}
+
+const form ={
+    backgroundColor: 'gray',
+    width: '600px',
+    padding: '20px',
+    border: '1px solid #ccc',
+}
+
 const CreateBlog = () => {
     const [title, setTitle] = useState('');
     const [body, setBody] = useState('');
     const [coverImage, setCoverImage] = useState(null);
     const [createdBy, setCreatedBy] = useState('');
     const { user, setUser } = useUser();
+    const [imgUrl, setImgUrl] = useState(null);
+
 
     const navigate = useNavigate();
     useEffect(() => {
         console.log(user);
     }, [])
 
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith("image/")) {
+            const reader = new FileReader();
+    
+            reader.onloadend = () => {
+                setImgUrl(reader.result);
+                setCoverImage(reader.result)
+                // setSignupData(prevData => ({
+                //     ...prevData,
+                //     profileImageURL: reader.result
+                // }));
+            };
+    
+            reader.readAsDataURL(file);
+        } else {
+            alert("Please select a proper image file");
+            setImgUrl(null);
+        }
+    };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('title', title);
         formData.append('body', body);
-        formData.append('coverImage', coverImage);
+        formData.append('coverImageURL', imgUrl || coverImage );
         formData.append('createdBy', createdBy);
 
         console.log(formData);
@@ -58,9 +108,9 @@ const CreateBlog = () => {
 
     return (
         <div className='publish'>
-            <nav className="navbar">
+            <nav style={navbarStyles} className="navbar">
 
-                <span onClick={()=>navigate("/bulk")} className='navbar-left'>Blogger</span>
+                <span onClick={()=>navigate("/bulk")} style={navbarLeft} className='navbar-left'>Blogger</span>
 
 
                 <div className="navbar-right">
@@ -69,16 +119,16 @@ const CreateBlog = () => {
                 </div>
             </nav>
             
-           <div className='publish_blog'>
-           <div className="form">
-            <h1>Publish a New Blog</h1>
+           <div style={publishBlog} className='publish_blog'>
+           <div  style={form} className="form">
+            <h1 >Publish a New Blog</h1>
             <form onSubmit={handleSubmit}>
                 <label>Title:</label>
                 <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} required />
                 <label>Body:</label>
-                <input value={body} onChange={(e) => setBody(e.target.value)} required />
+                <textarea  style={{minHeight:"40px",height:"100px", width:"100%"}} value={body} onChange={(e) => setBody(e.target.value)} required ></textarea>
                 <label>Cover Image:</label>
-                <input type='file' onChange={(e) => setCoverImage(e.target.files[0])} accept="image/*" required />
+                <input type='file' onChange={handleImageChange} accept="image/*" required />
 
                 <button type='submit'>Publish</button>
             </form>

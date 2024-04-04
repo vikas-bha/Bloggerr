@@ -1,4 +1,4 @@
-*{
+/* *{
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -15,19 +15,19 @@
 }
 .publish_blog {
     display: flex;
-    justify-content: center; /* Horizontal centering */
-    align-items: center; /* Vertical centering */
-    height: 100vh; /* Use the full height of the viewport */
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
     background-color: antiquewhite;
 }
 
 .form {
     background-color: gray;
-    width: 600px; /* Set the width of the form */
-    padding: 20px; /* Add some padding */
-    border: 1px solid #ccc; /* Add a border for visibility */
+    width: 600px; 
+    padding: 20px; 
+    border: 1px solid #ccc; 
 }
 
 h1{
     color:black
-}
+} */
