@@ -5,39 +5,22 @@ const Blogs = () => {
 
     const navigate = useNavigate();
     const [blogs, setBlogs] = useState([]);
-    // const blogs = [
-    //     {
-    //         _id : 1,
-    //         title : "lore ipsum", 
-    //         body : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non aliquam velit, a viverra sem. Ut efficitur ante eu nisi posuere interdum. Nullam id efficitur nunc, ut varius mi. Nam imperdiet felis non lacus egestas, quis dictum dolor dictum. Praesent eget eleifend lorem. Vestibulum cursus ornare tincidunt. Fusce eget ultrices elit.", 
-    //         coverImageURL : "https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    //         createdBy : "vikas", 
-
-
-            
-    //     }, 
-    //     {
-    //         _id : 2,
-    //         title : "lore ipsum", 
-    //         body : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non aliquam velit, a viverra sem. Ut efficitur ante eu nisi posuere interdum. Nullam id efficitur nunc, ut varius mi. Nam imperdiet felis non lacus egestas, quis dictum dolor dictum. Praesent eget eleifend lorem. Vestibulum cursus ornare tincidunt. Fusce eget ultrices elit.", 
-    //         coverImageURL : "https://images.unsplash.com/photo-1508780709619-79562169bc64?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    //         createdBy : "vikas", 
-
-
-            
-    //     }
-    // ]
+  
     useEffect(()=>{
       const fetchBlogs = async () => {
         try {
           const response = await fetch('http://localhost:5000/api/v1/blogs/bulk', {
-            method : "GET"
+            method : "GET", 
+            headers : {
+              "token" : sessionStorage.getItem("token")
+            }
           });
           if (!response.ok) {
             throw new Error('Failed to fetch blogs');
           }
           const data = await response.json();
-          setBlogs(data);
+          
+          setBlogs(data.blogs);
         } catch (error) {
           console.error('Error fetching blogs:', error.message);
         }
@@ -90,7 +73,7 @@ const Blogs = () => {
     bloglist
             </div> */}
                 <div className="list">
-                {blogs.map(blog => (
+                {blogs?.map(blog => (
                     <div className="blog-outer">
                         <div key={blog._id}  className="blog" onClick={() => handleBlogClick(blog._id)}>
                         <h2>{blog.title}</h2>

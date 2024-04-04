@@ -56,6 +56,9 @@ const CreateBlog = () => {
                 //     profileImageURL: reader.result
                 // }));
             };
+
+            console.log(imgUrl);
+            console.log(coverImage);
     
             reader.readAsDataURL(file);
         } else {
@@ -77,6 +80,9 @@ const CreateBlog = () => {
         try {
             const response = await fetch('http://localhost:5000/api/v1/blogs/add', {
                 method: 'POST',
+                headers : {
+                    "token" : sessionStorage.getItem("token")
+                  },
                 body: formData,
             });
             if (response.ok) {

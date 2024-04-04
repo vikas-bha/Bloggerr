@@ -2,10 +2,12 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User")
 
 const isAuthenticated = async (req, res, next) => {
-    let token = req.cookies.token;
+  console.log(req.headers);
+    let token = req.headers.token;
   
     if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         // If token is not in cookies, check headers (e.g., for API clients)
+        
         token = req.headers.authorization.split(' ')[1];
       }
     

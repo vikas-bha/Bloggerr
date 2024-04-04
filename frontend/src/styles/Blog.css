@@ -1,0 +1,22 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.Blog-container{
+    background-color: antiquewhite;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+   
+}
+.blog-outer-contaier{
+    min-height: 100vh;
+    background-color: antiquewhite;
+}
+.blog-inside-container{
+    padding: 5px;
+    width: 600px;
+    border: 2px solid black;
+}

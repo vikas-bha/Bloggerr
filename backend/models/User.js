@@ -14,11 +14,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-    },
-    profileImageURL: {
-      type: String,
-      default: '',
-    },
+    }
   },
   { timestamps: true }
 );
