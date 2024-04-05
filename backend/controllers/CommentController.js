@@ -4,18 +4,28 @@ const Comment = require('../models/Comment');
 
  const createComment = async (req, res) => {
     try {
-      const { blogId,parentCommentId } = req.params;
-
+      const { blogId,commentId } = req.params;
+      console.log(req.params);
       const { text } = req.body;
+      console.log(req.body);
+      console.log(text);
       const postedBy = req.userId; // Get user ID from decoded token
+      console.log("these are the two ID's of the request ",blogId, commentId);
   
      
-      const comment = new Comment({ text, blogId, parentComment: parentCommentId, postedBy });
+      const comment = new Comment({ text, blogId, parentComment: commentId, postedBy });
 
       await comment.save();
 
-      const parentCommentUpdate =  await Comment.findOne(parentCommentId);
-      parentCommentUpdate.replies.push(comment._id);
+      const blog = await Blog.findById(blogId);
+      console.log(blog)
+      blog.comments.push(comment._id);
+      await blog.save();
+      console.log(blog)
+
+      const parentCommentUpdate =  await Comment.findById(commentId);
+      console.log(" this is the parentCommentUpdate",parentCommentUpdate)
+      parentCommentUpdate.replies?.push(comment._id);
       await parentCommentUpdate.save();
       res.status(201).json({ message: 'Comment created successfully', comment });
     } catch (error) {
@@ -23,34 +33,44 @@ const Comment = require('../models/Comment');
     }
   };
 
-// const addReply = async (req, res) => {
-//   const blogId = req.params.blogId;
-//   const { text  } = req.body;
-//   const postedBy = req.userId;
+//   const getCommentById = async (req, res) => {
+//     try {
+//         const { commentId } = req.params;
+//           console.log(commentId);
+//         const comment = await Comment.findById(commentId);
+//         if (!comment) {
+//             return res.status(404).json({ message: 'Comment not found' });
+//         }
 
-//   try {
-//     // Find the post by ID
-//     const post = await Blog.findById(blogId);
-
-//     const user= req.user
-//     const fullname = user.fullName
-
-//     if (!post) {
-//       return res.status(404).json({ message: "Post not found" });
+//         res.status(200).json({ message: 'Comment found', comment });
+//     } catch (error) {
+//         res.status(500).json({ message: 'Failed to fetch comment', error: error.message });
 //     }
-
-//     // Add the new reply
-//     post.replies.push({ postedBy, text,  username: fullname });
-
-//     // Save the updated post
-//     const updatedPost = await post.save();
-
-//     res.status(201).json(updatedPost);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server Error" });
-//   }
 // };
+
+
+const getCommentById = async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    const comment = await fetchCommentWithReplies(commentId);
+    if (!comment) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+    res.status(200).json({ message: 'Comment found', comment });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch comment', error: error.message });
+  }
+};
+
+const fetchCommentWithReplies = async (commentId) => {
+  const comment = await Comment.findById(commentId);
+  if (!comment) {
+    return null;
+  }
+  const replies = await Promise.all(comment.replies.map(replyId => fetchCommentWithReplies(replyId)));
+  return { ...comment.toJSON(), replies };
+};
+
 
 
 
@@ -83,4 +103,4 @@ const Comment = require('../models/Comment');
   
   
   
-module.exports = { getAllReplies, createComment};
+module.exports = { getAllReplies, createComment, getCommentById};

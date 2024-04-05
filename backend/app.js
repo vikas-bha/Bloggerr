@@ -20,12 +20,14 @@ const PORT = process.env.PORT || 3000;
 
 const UserRoutes = require("./routes/User")
 const BlogRoutes = require("./routes/Blog")
+const CommentRoutes = require("./routes/Comment")
 const  connectDB  = require('./connection/connet');
 
 
 
 app.use("/api/v1/users", UserRoutes);
 app.use("/api/v1/blogs", BlogRoutes);
+app.use("/api/v1/comments",CommentRoutes);
 
 
 connectDB();

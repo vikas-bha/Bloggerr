@@ -20,6 +20,7 @@ function App() {
         <Route exact path="/bulk" element={<Blogs/>}/>
         <Route exact path="/blogs/:id" element={<Blog/>}/>    
         <Route exact path ="/create" element={<CreateBlog/>} />
+        {/* <Route exact path ="/comments/:commentId" element ={<CommentAndReplies/>} /> */}
           </Routes>
     </Router>
   </UserProvider>

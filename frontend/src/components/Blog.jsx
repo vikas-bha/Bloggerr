@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import "../styles/Blog.css"
+import Comments from './Comments';
 
 const Blog = () => {
     const { id } = useParams();
@@ -11,6 +12,7 @@ const Blog = () => {
     const [userId, setUserId] = useState(null);
     // let creatingUser ;
     const [creatingUser, setCreatingUser] = useState(null);
+    const [comment, setComment] = useState({ text : ''});
 
     
 
@@ -20,28 +22,118 @@ const Blog = () => {
         fetchUser();
     }, [id, userId]);
 
+    // const fetchBlog = async (id) => {
+    //     // Fetch blog data based on the ID
+    //     try {
+    //         const response = await fetch(`http://localhost:5000/api/v1/blogs/${id}` , {
+    //             method : "GET", 
+    //             headers : {
+    //               "token" : sessionStorage.getItem("token")
+    //             }
+    //         });
+    //         const data = await response.json();
+    //         console.log("showing from the blog.jsx ", data.blog)
+    //        setUserId(data.blog.createdBy);
+    //        console.log("this is the userId we need",userId)
+    //         setBlog(data.blog);
+    //     } catch (error) {
+    //         console.error('Error fetching blog:', error);
+    //     }
+    // };
+
+    // const fetchBlog = async (id) => {
+    //     try {
+    //         const response = await fetch(`http://localhost:5000/api/v1/blogs/${id}`, {
+    //             method: "GET",
+    //             headers: {
+    //                 "token": sessionStorage.getItem("token")
+    //             }
+    //         });
+    //         const data = await response.json();
+    //         console.log("showing from the blog.jsx ", data.blog)
+    //         setUserId(data.blog.createdBy);
+    //         console.log("this is the userId we need", userId)
+    
+    //         // Fetch user details for each comment
+    //         const updatedComments = await Promise.all(data.blog.comments.map(async (commentId) => {
+    //             const commentResponse = await fetch(`http://localhost:5000/api/v1/comments/${commentId}`, {
+    //                 method: "GET",
+    //                 headers: {
+    //                     "token": sessionStorage.getItem("token")
+    //                 }
+    //             });
+    //             const commentData = await commentResponse.json();
+    //             console.log("line number 65 commentData" , commentData)
+    //             return {
+    //                 _id: commentData.comment._id,
+    //                 text: commentData.comment.text,
+    //                 postedBy: commentData.comment.postedBy,
+    //             };
+    //         }));
+    
+    //         const updatedBlog = { ...data.blog, comments: updatedComments };
+    //         setBlog(updatedBlog);
+    //         return updatedBlog;
+    //     } catch (error) {
+    //         console.error('Error fetching blog:', error);
+    //     }
+    // };
+
     const fetchBlog = async (id) => {
-        // Fetch blog data based on the ID
         try {
-            const response = await fetch(`http://localhost:5000/api/v1/blogs/${id}` , {
-                method : "GET", 
-                headers : {
-                  "token" : sessionStorage.getItem("token")
+            const response = await fetch(`http://localhost:5000/api/v1/blogs/${id}`, {
+                method: "GET",
+                headers: {
+                    "token": sessionStorage.getItem("token")
                 }
             });
             const data = await response.json();
-            console.log("showing from the blog.jsx ", data.blog)
-           setUserId(data.blog.createdBy);
-           console.log("this is the userId we need",userId)
-            setBlog(data.blog);
+            // console.log("showing from the blog.jsx ", data.blog)
+            setUserId(data.blog.createdBy);
+            // console.log("this is the userId we need", userId)
+    
+            // Fetch user details for each comment
+            const updatedComments = await Promise.all(data.blog.comments.map(async (comment) => {
+                const commentResponse = await fetch(`http://localhost:5000/api/v1/comments/${comment}`, {
+                    method: "GET",
+                    headers: {
+                        "token": sessionStorage.getItem("token")
+                    }
+                });
+                const commentData = await commentResponse.json();
+                // console.log("here we are trying to console the commentData the ids of tghe comments",commentData, commentData.comment.postedBy)
+                const userResponse = await fetch(`http://localhost:5000/api/v1/users/${commentData.comment.postedBy}`, {
+                    method: "GET",
+                    headers: {
+                        "token": sessionStorage.getItem("token")
+                    }
+                });
+                const userData = await userResponse.json();
+                // console.log("line number 65 userData", userData);
+                
+                return {
+                    // _id: comment._id,
+                    blogId:id,
+                    _id: commentData.comment._id,
+                    text: commentData.comment.text,
+                    postedBy: userData.user.fullName,
+                    replies : commentData.comment.replies
+                };
+            }));
+    
+            const updatedBlog = { ...data.blog, comments: updatedComments };
+            setBlog(updatedBlog);
+            return updatedBlog;
         } catch (error) {
             console.error('Error fetching blog:', error);
         }
     };
+    
+    
 
     const fetchUser = async()=>{
         try {
-            console.log(userId);
+            // console.log(userId);
             const response = await fetch(`http://localhost:5000/api/v1/users/${userId}` , {
                 method : "GET", 
                 headers : {
@@ -50,10 +142,10 @@ const Blog = () => {
         })
 
         const data = await response.json();
-        console.log("data from the fetchUser funtion", data.user.fullName)
+        // console.log("data from the fetchUser funtion", data.user.fullName)
         // creatingUser= data.user.fullName;
         setCreatingUser(data.user.fullName)
-        console.log(creatingUser);
+        // console.log(creatingUser);
         } catch (error) {
             console.error('Error fetching user:', error);
         }
@@ -75,7 +167,39 @@ const Blog = () => {
 
       };
 
+      const handleCommentChange = (e)=>{
+        setComment({ text: e.target.value });        
+        console.log(comment);
+      }
 
+      const submitComment = async ()=>{
+        console.log(comment);
+        try {
+            const response = await fetch(`http://localhost:5000/api/v1/blogs/comment/${blog._id}`, {
+                method: 'POST',
+                headers : {
+                    'Content-Type': 'application/json',
+                    "token" : sessionStorage.getItem("token")
+                  },
+              //   headers: {
+              //     'Content-Type': 'application/json',
+              //     'Authorization': `Bearer ${sessionStorage.getItem('token')}`, // Include the JWT token in the Authorization header
+              // },
+                body: JSON.stringify(comment),
+            });
+
+            const data = await response.json();
+            console.log(data);
+            alert("comment created sucessfully")
+            fetchBlog(id);
+    
+        } catch (error) {
+            console.log("error while posting comment", error)
+            
+        }
+
+
+      }
     return (
         <div className='blog-post'>
 
@@ -97,10 +221,21 @@ const Blog = () => {
                     <p>{blog.body}</p>
                     {blog.coverImageURL && <img width="100%" src={blog.coverImageURL} alt="Cover Image" />}
                     <p>Created By: {creatingUser}</p>
-                    <h2>Comments:</h2>
+                        <div className="comment-box">
+                            <input placeholder='Post your comment' onChange={handleCommentChange} required/>
+                            <button onClick={submitComment} >Post</button>
+                        </div>
+                   <div className="comments-box">
+                   <h2>Comments:</h2>
+                   </div>
                     <ul>
                         {blog.comments?.map(comment => (
-                            <li key={comment._id}>{comment.text}</li>
+                            <div >
+                                {/* <li >{comment.postedBy}</li>
+                                                            <li key={comment._id}>{comment.text}</li> */}
+                                        <Comments comment={comment}/>
+
+                            </div>
                         ))}
                     </ul>
                     

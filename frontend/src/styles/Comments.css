@@ -1,0 +1,39 @@
+.comment{
+    border-bottom: 1px solid grey;
+    padding: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.user{
+    font-size: large;
+    font-weight: bolder;
+}
+
+.reply {
+    position: absolute;
+    right: 10px;
+    top: 25px;
+    padding: 5px;
+    background-color: olive;
+    border: none;
+    color: white;
+    border-radius: 2px;
+    
+}
+.textArea{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.reply-submit{
+    margin-top: 5px;
+    padding: 5px;
+    font-size: large;
+    font-weight: bold;
+    background-color: olive;
+    color: white;
+    width: 100%;
+    border: none;
+}
