@@ -59,10 +59,10 @@ const SignupLogin = () => {
     // Add logic to send signup data to backend
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async(e) => {
     e.preventDefault();
     console.log('Login data:', loginData);
-    login(loginData);
+    await login(loginData);
     navigate("/bulk");
     // Add logic to send login data to backend
   };
@@ -84,7 +84,7 @@ const SignupLogin = () => {
       const data = await response.json();
       // Handle the response data, e.g., set user state or save token to local storage
       console.log(data);
-      setUser(data.user);
+      // setUser(data.user);
       console.log(user);
     } catch (error) {
       console.error('Error logging in:', error.message);
@@ -101,6 +101,10 @@ const SignupLogin = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
+          //   headers: {
+          //     'Content-Type': 'application/json',
+          //     'Authorization': `Bearer ${sessionStorage.getItem('token')}`, // Include the JWT token in the Authorization header
+          // },
             body: JSON.stringify(loginData),
         });
 
@@ -112,6 +116,9 @@ const SignupLogin = () => {
         // Store user data in sessionStorage
         console.log(data);
         sessionStorage.setItem('user', JSON.stringify(data.user));
+        console.log(data.user);
+        setUser(data.user);
+        console.log("the user after setting the setUser", user);
         sessionStorage.setItem('token', data.token);
 
         console.log('Login successful');

@@ -55,6 +55,7 @@ const getAllBlogs = async (req, res) => {
       const blog = new Blog({ title, body, coverImageURL, createdBy });
       await blog.save();
   
+      
       res.status(201).json({ message: 'Blog created successfully', blog });
     } catch (error) {
       res.status(500).json({ message: 'Failed to create blog', error: error.message });

@@ -1,0 +1,30 @@
+.loginFirst-container{
+    display: flex;
+    color: antiquewhite;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+}
+
+.loginFirst-inside-container{
+    background-color: gainsboro;
+    width: 500px; 
+    height: 50px;
+    text-align: center;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+
+}
+
+.loginFirst-span:hover{
+    text-decoration: underline;
+    color: white
+}
