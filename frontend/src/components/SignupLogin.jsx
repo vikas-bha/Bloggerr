@@ -15,12 +15,10 @@ const SignupLogin = () => {
 
 
   useEffect(()=>{
-    console.log(user)
 
   },[])
   const handleSignupChange = (e) => {
     setSignupData({ ...signupData, [e.target.name]: e.target.value });
-    console.log(signupData)
 
   };
 
@@ -53,7 +51,7 @@ const SignupLogin = () => {
 
   const handleSignupSubmit = (e) => {
     e.preventDefault();
-    console.log('Signup data:', signupData);
+    // console.log('Signup data:', signupData);
     signup(signupData);
     toggleForm();
     // Add logic to send signup data to backend
@@ -61,7 +59,7 @@ const SignupLogin = () => {
 
   const handleLoginSubmit = async(e) => {
     e.preventDefault();
-    console.log('Login data:', loginData);
+    // console.log('Login data:', loginData);
     await login(loginData);
     navigate("/bulk");
     // Add logic to send login data to backend
@@ -83,9 +81,9 @@ const SignupLogin = () => {
   
       const data = await response.json();
       // Handle the response data, e.g., set user state or save token to local storage
-      console.log(data);
+      // console.log(data);
       // setUser(data.user);
-      console.log(user);
+      // console.log(user);
     } catch (error) {
       console.error('Error logging in:', error.message);
       // Handle error, e.g., show error message to user
@@ -114,15 +112,11 @@ const SignupLogin = () => {
 
         const data = await response.json();
         // Store user data in sessionStorage
-        console.log(data);
         sessionStorage.setItem('user', JSON.stringify(data.user));
-        console.log(data.user);
         setUser(data.user);
-        console.log("the user after setting the setUser", user);
         sessionStorage.setItem('token', data.token);
 
-        console.log('Login successful');
-        console.log('User data stored in sessionStorage:', data.user);
+   
     } catch (error) {
         console.error('Error logging in:', error.message);
         // Handle error, e.g., show error message to user

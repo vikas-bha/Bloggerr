@@ -40,7 +40,7 @@ const CreateBlog = () => {
 
     const navigate = useNavigate();
     useEffect(() => {
-        console.log("this user is coming from the CreateBlog",user);
+        // console.log("this user is coming from the CreateBlog",user);
     }, [])
 
 
@@ -58,9 +58,7 @@ const CreateBlog = () => {
                 // }));
             };
 
-            console.log(imgUrl);
-            console.log(coverImage);
-    
+           
             reader.readAsDataURL(file);
         } else {
             alert("Please select a proper image file");
@@ -88,13 +86,13 @@ const CreateBlog = () => {
                 body: formData,
             });
             if (response.ok) {
-                console.log('Blog published successfully');
+                // console.log('Blog published successfully');
                 const data = await response.json();
-                console.log(data);
+                // console.log(data);
                 const blog = data.blog;
-                console.log(blog);
+                // console.log(blog);
                  id = blog._id;
-                console.log(id);
+                // console.log(id);
 
             } else {
                 console.error('Failed to publish blog');
@@ -117,7 +115,7 @@ const CreateBlog = () => {
             body: JSON.stringify(),
         });
 
-        console.log(response.data);
+        // console.log(response.data);
         navigate("/");
 
     };

@@ -12,7 +12,7 @@ const Blogs = () => {
 
   
     useEffect(()=>{
-      console.log("this user is coming from the blogs.jsx component", user);
+      // console.log("this user is coming from the blogs.jsx component", user);
       
       const fetchBlogs = async () => {
         try {
@@ -26,7 +26,7 @@ const Blogs = () => {
             throw new Error('Failed to fetch blogs');
           }
           const data = await response.json();
-          console.log('Data fetched:', data);
+          // console.log('Data fetched:', data);
           const blogsWithAuthors = await Promise.all(
             data.blogs.map(async (blog) => {
               const userResponse = await fetch(`http://localhost:5000/api/v1/users/${blog.createdBy}`, {
@@ -42,7 +42,7 @@ const Blogs = () => {
               };
             })
           );
-          console.log('BlogsWithAuthors:', blogsWithAuthors);
+          // console.log('BlogsWithAuthors:', blogsWithAuthors);
           setBlogs(blogsWithAuthors);
         } catch (error) {
           console.error('Error fetching blogs:', error.message);
@@ -62,7 +62,7 @@ const Blogs = () => {
 
     const handleLogout = async () => {
       try {
-          console.log('Logging out');
+          // console.log('Logging out');
           const response = await fetch('http://localhost:5000/api/v1/users/logout', {
               method: 'POST',
               headers: {
@@ -75,7 +75,7 @@ const Blogs = () => {
               throw new Error('Failed to logout');
           }
   
-          console.log('Logout successful');
+          // console.log('Logout successful');
           // Clear user data from sessionStorage
           sessionStorage.removeItem('user');
           sessionStorage.removeItem('token');

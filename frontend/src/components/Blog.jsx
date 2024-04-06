@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import "../styles/Blog.css"
 import Comments from './Comments';
+import { useUser } from '../UserContext';
+import LoginFirst from './LoginFirst';
+
 
 const Blog = () => {
     const { id } = useParams();
@@ -13,6 +15,7 @@ const Blog = () => {
     // let creatingUser ;
     const [creatingUser, setCreatingUser] = useState(null);
     const [comment, setComment] = useState({ text : ''});
+    const { user, setUser } = useUser();
 
     
 
@@ -22,62 +25,7 @@ const Blog = () => {
         fetchUser();
     }, [id, userId]);
 
-    // const fetchBlog = async (id) => {
-    //     // Fetch blog data based on the ID
-    //     try {
-    //         const response = await fetch(`http://localhost:5000/api/v1/blogs/${id}` , {
-    //             method : "GET", 
-    //             headers : {
-    //               "token" : sessionStorage.getItem("token")
-    //             }
-    //         });
-    //         const data = await response.json();
-    //         console.log("showing from the blog.jsx ", data.blog)
-    //        setUserId(data.blog.createdBy);
-    //        console.log("this is the userId we need",userId)
-    //         setBlog(data.blog);
-    //     } catch (error) {
-    //         console.error('Error fetching blog:', error);
-    //     }
-    // };
-
-    // const fetchBlog = async (id) => {
-    //     try {
-    //         const response = await fetch(`http://localhost:5000/api/v1/blogs/${id}`, {
-    //             method: "GET",
-    //             headers: {
-    //                 "token": sessionStorage.getItem("token")
-    //             }
-    //         });
-    //         const data = await response.json();
-    //         console.log("showing from the blog.jsx ", data.blog)
-    //         setUserId(data.blog.createdBy);
-    //         console.log("this is the userId we need", userId)
-    
-    //         // Fetch user details for each comment
-    //         const updatedComments = await Promise.all(data.blog.comments.map(async (commentId) => {
-    //             const commentResponse = await fetch(`http://localhost:5000/api/v1/comments/${commentId}`, {
-    //                 method: "GET",
-    //                 headers: {
-    //                     "token": sessionStorage.getItem("token")
-    //                 }
-    //             });
-    //             const commentData = await commentResponse.json();
-    //             console.log("line number 65 commentData" , commentData)
-    //             return {
-    //                 _id: commentData.comment._id,
-    //                 text: commentData.comment.text,
-    //                 postedBy: commentData.comment.postedBy,
-    //             };
-    //         }));
-    
-    //         const updatedBlog = { ...data.blog, comments: updatedComments };
-    //         setBlog(updatedBlog);
-    //         return updatedBlog;
-    //     } catch (error) {
-    //         console.error('Error fetching blog:', error);
-    //     }
-    // };
+   
 
     const fetchBlog = async (id) => {
         try {
@@ -102,13 +50,13 @@ const Blog = () => {
                 });
                 const commentData = await commentResponse.json();
                 // console.log("here we are trying to console the commentData the ids of tghe comments",commentData, commentData.comment.postedBy)
-                const userResponse = await fetch(`http://localhost:5000/api/v1/users/${commentData.comment.postedBy}`, {
-                    method: "GET",
-                    headers: {
-                        "token": sessionStorage.getItem("token")
-                    }
-                });
-                const userData = await userResponse.json();
+                // const userResponse = await fetch(`http://localhost:5000/api/v1/users/${commentData.comment.postedBy}`, {
+                //     method: "GET",
+                //     headers: {
+                //         "token": sessionStorage.getItem("token")
+                //     }
+                // });
+                // const userData = await userResponse.json();
                 // console.log("line number 65 userData", userData);
                 
                 return {
@@ -116,7 +64,8 @@ const Blog = () => {
                     blogId:id,
                     _id: commentData.comment._id,
                     text: commentData.comment.text,
-                    postedBy: userData.user.fullName,
+                    // postedBy: userData.user.fullName,
+                    postedBy: commentData.comment.postedBy,
                     replies : commentData.comment.replies
                 };
             }));
@@ -153,7 +102,7 @@ const Blog = () => {
 
     const handleLogout = async () => {
         // Your logout logic here
-        console.log('Logged out');
+        // console.log('Logged out');
         const response = await fetch('http://localhost:5000/api/v1/users/logout', {
           method: 'POST',
           headers: {
@@ -162,14 +111,14 @@ const Blog = () => {
           body: JSON.stringify(),
         });
 
-        console.log(response.data);
+        // console.log(response.data);
         navigate("/");
 
       };
 
       const handleCommentChange = (e)=>{
         setComment({ text: e.target.value });        
-        console.log(comment);
+        // console.log(comment);
       }
 
       const submitComment = async ()=>{
@@ -189,7 +138,7 @@ const Blog = () => {
             });
 
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             alert("comment created sucessfully")
             fetchBlog(id);
     
@@ -213,7 +162,9 @@ const Blog = () => {
 
    </div>
  </nav>
-            {blog ? (
+{
+    user ?  <>
+                {blog ? (
                     <div className="blog-outer-contaier">
                                         <div className='Blog-container'>
                         <div className='blog-inside-container'>
@@ -246,6 +197,8 @@ const Blog = () => {
             ) : (
                 <p>Loading...</p>
             )}
+    </> : <LoginFirst/>
+}
         </div>
     );
 };

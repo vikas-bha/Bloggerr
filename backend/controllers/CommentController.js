@@ -5,10 +5,10 @@ const Comment = require('../models/Comment');
  const createComment = async (req, res) => {
     try {
       const { blogId,commentId } = req.params;
-      console.log(req.params);
+      // console.log(req.params);
       const { text } = req.body;
-      console.log(req.body);
-      console.log(text);
+      // console.log(req.body);
+      // console.log(text);
       const postedBy = req.userId; // Get user ID from decoded token
       console.log("these are the two ID's of the request ",blogId, commentId);
   
@@ -18,13 +18,46 @@ const Comment = require('../models/Comment');
       await comment.save();
 
       const blog = await Blog.findById(blogId);
-      console.log(blog)
+      // // console.log(blog)
       blog.comments.push(comment._id);
       await blog.save();
-      console.log(blog)
+      // console.log(blog)
 
       const parentCommentUpdate =  await Comment.findById(commentId);
-      console.log(" this is the parentCommentUpdate",parentCommentUpdate)
+      // console.log(" this is the parentCommentUpdate",parentCommentUpdate)
+      parentCommentUpdate.replies?.push(comment._id);
+      await parentCommentUpdate.save();
+      res.status(201).json({ message: 'Comment created successfully', comment });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to create comment', error: error.message });
+    }
+  };
+
+
+  const addReplies = async (req, res) => {
+    try {
+      const { blogId,commentId } = req.params;
+      // console.log(req.params);
+      const { text } = req.body;
+      // console.log(req.body);
+      // console.log(text);
+      const postedBy = req.userId; // Get user ID from decoded token
+      // console.log("these are the two ID's of the request ",blogId, commentId);
+      console.log(req.userId);
+  
+     
+      const comment = new Comment({ text, blogId, parentComment: commentId, postedBy });
+
+      await comment.save();
+
+      // const blog = await Blog.findById(blogId);
+      // console.log(blog)
+      // blog.comments.push(comment._id);
+      // await blog.save();
+      // console.log(blog)
+
+      const parentCommentUpdate =  await Comment.findById(commentId);
+      // console.log(" this is the parentCommentUpdate",parentCommentUpdate)
       parentCommentUpdate.replies?.push(comment._id);
       await parentCommentUpdate.save();
       res.status(201).json({ message: 'Comment created successfully', comment });
@@ -103,4 +136,4 @@ const fetchCommentWithReplies = async (commentId) => {
   
   
   
-module.exports = { getAllReplies, createComment, getCommentById};
+module.exports = { getAllReplies, createComment, getCommentById, addReplies};
